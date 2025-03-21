@@ -118,7 +118,7 @@ fig.add_trace(go.Scatter(
 ))
 
 fig.update_layout(
-    title='Sarvottam Model: Baseline vs Optimized Revenue',
+    title='Optym Model: Baseline vs Optimized Revenue',
     plot_bgcolor='white',
     xaxis_title='Time Period',
     yaxis_title='Revenue',
