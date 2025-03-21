@@ -208,18 +208,27 @@ with tab1:
         x='Channel',
         y='Budget',
         color='Budget Type',
-        title='Robyn Model: Original vs New Budget Allocation',
+        title='Robyn Model: Channel Budget Comparison',
         barmode='group',
-        color_discrete_sequence=[BLUE_PALETTE[0], BLUE_PALETTE[2]]
+        color_discrete_sequence=[BLUE_PALETTE[0], BLUE_PALETTE[2]],
+        labels={'Budget': 'Budget (Million $)', 'Channel': 'Marketing Channel'},
+        text=budget_comparison['Budget'].round(1)
     )
     
     fig.update_layout(
         plot_bgcolor='white',
         xaxis_title='Marketing Channel',
         yaxis_title='Budget (Million $)',
-        hovermode='closest',
-        legend_title='Budget Type'
+        hovermode='x unified',
+        legend_title='Budget Type',
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+        showlegend=True,
+        barmode='group',
+        bargap=0.2,
+        bargroupgap=0.1
     )
+    
+    fig.update_traces(textposition='outside')
     
     st.plotly_chart(fig, use_container_width=True)
     
