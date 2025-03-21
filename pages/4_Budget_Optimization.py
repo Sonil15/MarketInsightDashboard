@@ -192,6 +192,37 @@ with tab1:
     The Max Response model optimizes budget to achieve maximum revenue without specific ROAS constraints.
     """)
     
+    # Load and prepare Robyn budget data
+    robyn_budget_data = pd.read_csv('attached_assets/Robyn_marketing_budget_allocation.csv')
+    budget_comparison = pd.melt(
+        robyn_budget_data,
+        id_vars=['Channel'],
+        value_vars=['Original_Budget', 'New_Budget'],
+        var_name='Budget Type',
+        value_name='Budget'
+    )
+    
+    # Create clustered bar chart
+    fig = px.bar(
+        budget_comparison,
+        x='Channel',
+        y='Budget',
+        color='Budget Type',
+        title='Robyn Model: Original vs New Budget Allocation',
+        barmode='group',
+        color_discrete_sequence=[BLUE_PALETTE[0], BLUE_PALETTE[2]]
+    )
+    
+    fig.update_layout(
+        plot_bgcolor='white',
+        xaxis_title='Marketing Channel',
+        yaxis_title='Budget (Million $)',
+        hovermode='closest',
+        legend_title='Budget Type'
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
     # Show example of max response allocation
     st.image("attached_assets/1_190_4_reallocated_best_roas.png")
 
