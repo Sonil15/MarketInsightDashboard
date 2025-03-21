@@ -63,61 +63,48 @@ fig1.update_layout(
 
 st.plotly_chart(fig1, use_container_width=True)
 
-# Chart 2: Monthly Revenue Comparison
-st.subheader("Monthly Revenue Comparison")
+# Chart 2: Optym Model Channel Budget Allocation
+st.subheader("Optym Model Channel Budget Allocation")
 
-# Load merged file data
-df = pd.read_csv('attached_assets/merged_file.csv')
+# Load merged file data for Optym channel allocation
+optym_data = pd.read_csv('attached_assets/merged_file.csv')
 
-# Extract dates and totals
-dates = pd.to_datetime(df['Unnamed: 0_baseline']).dt.strftime('%b %Y')
-baseline = df['Total_baseline']
-optimized = df['Total_optimized']
+# Select only the baseline columns needed
+baseline_columns = [col for col in optym_data.columns if '_baseline' in col and 'Unnamed' not in col and 'Total' not in col]
 
-# Calculate percentage improvements
-pct_improvement = ((optimized - baseline) / baseline * 100).round(1)
+# Calculate the average for each channel across all time periods
+channel_averages = {}
+for col in baseline_columns:
+    channel_name = col.replace('_baseline', '')
+    channel_averages[channel_name] = optym_data[col].mean()
 
-# Create figure
+# Create dataframe for the bar chart
+channels = list(channel_averages.keys())
+values = list(channel_averages.values())
+
+optym_df = pd.DataFrame({'Channel': channels, 'Budget': values})
+
+# Create clustered bar chart for Optym channels
 fig2 = go.Figure()
 
-# Add baseline bars
+# Add bars for each channel
 fig2.add_trace(go.Bar(
-    x=dates,
-    y=baseline,
-    name='Baseline',
-    marker_color=BLUE_PALETTE[0],
-    width=0.35
-))
-
-# Add optimized bars
-fig2.add_trace(go.Bar(
-    x=dates,
-    y=optimized,
-    name='Optimized',
-    marker_color=BLUE_PALETTE[2],
-    width=0.35,
-    text=[f"{pct}%" for pct in pct_improvement],
+    x=optym_df['Channel'],
+    y=optym_df['Budget'],
+    marker_color=BLUE_PALETTE[1],
+    text=optym_df['Budget'].round(2),
     textposition='outside'
 ))
 
 # Update layout
 fig2.update_layout(
-    title='Monthly Revenue Comparison',
-    xaxis_title='Month',
-    yaxis_title='Revenue',
+    title='Optym Model: Average Channel Budget Allocation',
+    xaxis_title='Marketing Channel',
+    yaxis_title='Budget',
     plot_bgcolor='white',
-    barmode='group',
-    bargap=0.15,
-    bargroupgap=0.1,
-    legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=1
-    ),
-    yaxis=dict(gridcolor='lightgrey'),
-    font=dict(color='#424242')
+    font=dict(color='#424242'),
+    margin=dict(l=10, r=10, t=30, b=10),
+    hovermode='closest'
 )
 
 st.plotly_chart(fig2, use_container_width=True)
