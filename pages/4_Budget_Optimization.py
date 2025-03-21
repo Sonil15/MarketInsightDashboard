@@ -11,7 +11,7 @@ from utils import (
     load_robyn_max_response,
     load_robyn_target_efficiency,
     create_budget_comparison_chart,
-    create_sarvottam_channel_allocation,
+    create_optym_channel_allocation,
     create_robyn_channel_allocation,
     BLUE_PALETTE
 )
