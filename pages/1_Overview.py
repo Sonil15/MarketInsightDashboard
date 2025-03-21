@@ -19,6 +19,24 @@ st.set_page_config(
 # Load data
 df = load_merged_data()
 
+# Add CSS for rounded corner boxes
+st.markdown("""
+<style>
+    div.stPlotlyChart, div.stText, div.stMarkdown, div.stMetric {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e6e6e6;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
+    
+    div.block-container {
+        padding-top: 2rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Page title
 st.title("Overview Dashboard")
 st.markdown("This dashboard provides an overview of GMV and sales data.")

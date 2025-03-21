@@ -104,25 +104,23 @@ st.subheader("NPS and Stock Index Over Time")
 nps_stock_chart = create_nps_stock_chart(df)
 st.plotly_chart(nps_stock_chart, use_container_width=True)
 
-# ROI Distribution
-st.subheader("ROI Distribution")
-
-fig = px.histogram(
-    df, 
-    x='ROI',
-    nbins=10,
-    title='ROI Distribution',
-    color_discrete_sequence=[BLUE_PALETTE[0]]
-)
-
-fig.update_layout(
-    plot_bgcolor='white',
-    xaxis_title='ROI',
-    yaxis_title='Frequency',
-    hovermode='closest'
-)
-
-st.plotly_chart(fig, use_container_width=True)
+# Add CSS for rounded corner boxes
+st.markdown("""
+<style>
+    div.stPlotlyChart, div.stText, div.stMarkdown, div.stMetric {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e6e6e6;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
+    
+    div.block-container {
+        padding-top: 2rem;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # Key Takeaways
 st.subheader("Key Takeaways")
