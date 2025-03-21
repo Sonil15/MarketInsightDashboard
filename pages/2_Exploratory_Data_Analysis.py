@@ -25,91 +25,16 @@ df = load_merged_data()
 st.title("Exploratory Data Analysis")
 st.markdown("This dashboard explores relationships between different variables in the dataset.")
 
-# Add top metrics with delta values like in main app
-col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
-
-with col1:
-    avg_nps = df['NPS'].mean()
-    prev_nps = avg_nps - 0.5  # Simulating improvement
-    delta_nps = avg_nps - prev_nps
-    st.metric("Average NPS", f"{avg_nps:.2f}", 
-             delta=f"+{delta_nps:.1f} vs prev period", 
-             delta_color="normal")
-
-with col2:
-    avg_stock = df['Stock_index'].mean()
-    prev_stock = avg_stock * 0.95
-    delta_stock_pct = ((avg_stock - prev_stock) / prev_stock) * 100
-    st.metric("Avg Stock Index", f"{avg_stock:.1f}", 
-             delta=f"+{delta_stock_pct:.1f}% vs prev period", 
-             delta_color="normal")
-
-with col3:
-    digital_spend = df['Digital'].sum()
-    prev_digital = digital_spend * 0.88
-    delta_digital_pct = ((digital_spend - prev_digital) / prev_digital) * 100
-    st.metric("Digital Marketing", f"${digital_spend:,.0f}", 
-             delta=f"+{delta_digital_pct:.1f}% vs prev period", 
-             delta_color="normal")
-
-with col4:
-    # Create a gauge chart for Correlation
-    import plotly.graph_objects as go
-    
-    # Correlation data - simulated correlation between NPS and GMV
-    correlation_value = 0.72  # Correlation coefficient
-    
-    # Create the gauge chart
-    fig = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=correlation_value * 100,
-        title={"text": "NPS-GMV Corr.", "font": {"size": 14, "color": "#616161"}},
-        gauge={
-            "axis": {"range": [0, 100], "tickwidth": 1, "tickcolor": "#616161"},
-            "bar": {"color": "#1e88e5"},
-            "bgcolor": "white",
-            "borderwidth": 0,
-            "bordercolor": "white",
-            "steps": [
-                {"range": [0, 30], "color": "#e3f2fd"},
-                {"range": [30, 70], "color": "#bbdefb"},
-                {"range": [70, 100], "color": "#90caf9"}
-            ],
-            "threshold": {
-                "line": {"color": "green", "width": 4},
-                "thickness": 0.75,
-                "value": 60
-            }
-        }
-    ))
-    
-    # Update layout
-    fig.update_layout(
-        height=120,
-        margin=dict(l=10, r=10, t=40, b=10),
-        paper_bgcolor="white",
-        font={"color": "#616161", "family": "Arial"}
-    )
-    
-    st.markdown("<div class='card-title'>NPS-GMV Correlation</div>", unsafe_allow_html=True)
-    st.plotly_chart(fig, use_container_width=True)
-
-# NPS vs GMV Plot with card styling
-st.subheader("NPS vs GMV Relationship")
+# NPS vs GMV Plot
+st.subheader("NPS vs GMV")
 nps_gmv_chart = create_nps_gmv_chart(df)
 st.plotly_chart(nps_gmv_chart, use_container_width=True)
 
-# Explanation in a styled card
+# Explanation
 st.markdown("""
-<div style="background-color: white; padding: 1rem; border-radius: 8px; border: 1px solid #e6e6e6; margin-bottom: 1.5rem;">
-    <div style="font-weight: 500; color: #616161; margin-bottom: 0.5rem;">Analysis Insights</div>
-    <div style="color: #212121; font-size: 0.9rem;">
-        The scatter plot above shows the relationship between NPS (Net Promoter Score) and total GMV (Gross Merchandise Value).
-        The trend line indicates a positive correlation between customer satisfaction and sales, suggesting that improving NPS
-        can lead to higher GMV.
-    </div>
-</div>
-""", unsafe_allow_html=True)
+The scatter plot above shows the relationship between NPS (Net Promoter Score) and total GMV (Gross Merchandise Value).
+The trend line indicates the general relationship between customer satisfaction and sales.
+""")
 
 
 
@@ -191,35 +116,23 @@ with col2:
     corr_heatmap = create_correlation_heatmap(df, corr_columns)
     st.plotly_chart(corr_heatmap, use_container_width=True)
 
-# Insights section with card styling
+# Insights section
 st.subheader("Key Insights")
 
 col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("""
-    <div style="background-color: white; padding: 1rem; border-radius: 8px; border: 1px solid #e6e6e6; height: 100%;">
-        <div style="font-weight: 500; color: #1e88e5; margin-bottom: 0.8rem; font-size: 1.1rem;">Marketing Channel Effectiveness</div>
-        <div style="color: #212121; font-size: 0.9rem;">
-            <ul style="padding-left: 1.2rem; margin-top: 0.5rem;">
-                <li style="margin-bottom: 0.5rem;"><span style="font-weight: 500; color: #424242;">Sponsorship</span> has the highest investment among all channels</li>
-                <li style="margin-bottom: 0.5rem;"><span style="font-weight: 500; color: #424242;">Digital</span> marketing shows consistent investment over time</li>
-                <li style="margin-bottom: 0.5rem;"><span style="font-weight: 500; color: #424242;">TV</span> advertising has varied investment patterns</li>
-            </ul>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    ### Marketing Channel Effectiveness
+    - **Sponsorship** has the highest investment among all channels
+    - **Digital** marketing shows consistent investment over time
+    - **TV** advertising has varied investment patterns
+    """)
 
 with col2:
     st.markdown("""
-    <div style="background-color: white; padding: 1rem; border-radius: 8px; border: 1px solid #e6e6e6; height: 100%;">
-        <div style="font-weight: 500; color: #1e88e5; margin-bottom: 0.8rem; font-size: 1.1rem;">Weather and Sales Relationship</div>
-        <div style="color: #212121; font-size: 0.9rem;">
-            <ul style="padding-left: 1.2rem; margin-top: 0.5rem;">
-                <li style="margin-bottom: 0.5rem;"><span style="font-weight: 500; color: #424242;">Temperature</span> shows a moderate correlation with GMV</li>
-                <li style="margin-bottom: 0.5rem;"><span style="font-weight: 500; color: #424242;">Precipitation</span> has a weak negative correlation with sales</li>
-                <li style="margin-bottom: 0.5rem;">Understanding these relationships can help in seasonal planning</li>
-            </ul>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    ### Weather and Sales Relationship
+    - Temperature shows a moderate correlation with GMV
+    - Precipitation has a weak negative correlation with sales
+    - Understanding these relationships can help in seasonal planning
+    """)
