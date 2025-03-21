@@ -38,16 +38,21 @@ The trend line indicates the general relationship between customer satisfaction 
 
 
 
-# Marketing Channel Investment
-st.subheader("Monthly Investment by Marketing Channel")
-marketing_chart = create_marketing_channel_chart(df)
-st.plotly_chart(marketing_chart, use_container_width=True)
+# Create two columns for charts
+col1, col2 = st.columns(2)
 
-# Monthly GMV Trend by Product Category
-st.subheader("Monthly GMV Trend by Product Category")
+with col1:
+    # Marketing Channel Investment
+    st.subheader("Monthly Investment by Marketing Channel")
+    marketing_chart = create_marketing_channel_chart(df)
+    st.plotly_chart(marketing_chart, use_container_width=True)
 
-# Filter columns for product categories
-product_categories = ['Camera', 'CameraAccessory', 'EntertainmentSmall', 'GameCDDVD', 'GamingHardware']
+with col2:
+    # Monthly GMV Trend by Product Category
+    st.subheader("Monthly GMV Trend by Product Category")
+    
+    # Filter columns for product categories
+    product_categories = ['Camera', 'CameraAccessory', 'EntertainmentSmall', 'GameCDDVD', 'GamingHardware']
 
 # Create a DataFrame with product categories over time
 product_df = df[['YearMonth'] + product_categories]
