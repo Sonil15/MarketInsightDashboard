@@ -82,37 +82,39 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# Weather Factors Correlation with GMV
-st.subheader("Weather Factors Correlation with Total GMV")
-weather_corr_chart = create_weather_correlation_chart(df)
-st.plotly_chart(weather_corr_chart, use_container_width=True)
+# Create two columns for weather correlation analysis
+col1, col2 = st.columns(2)
 
-# Explanation
-st.markdown("""
-This chart shows the correlation between various weather factors and total GMV:
-- **tavg**: Average temperature
-- **prcp**: Precipitation
-- **wspd**: Wind speed
-- **pres**: Atmospheric pressure
+with col1:
+    # Weather Factors Correlation with GMV
+    st.subheader("Weather Factors Correlation with Total GMV")
+    weather_corr_chart = create_weather_correlation_chart(df)
+    st.plotly_chart(weather_corr_chart, use_container_width=True)
 
-Positive values indicate a positive correlation (as one increases, so does the other),
-while negative values indicate an inverse relationship.
-""")
+    # Explanation
+    st.markdown("""
+    This chart shows the correlation between various weather factors and total GMV:
+    - **tavg**: Average temperature
+    - **prcp**: Precipitation
+    - **wspd**: Wind speed
+    - **pres**: Atmospheric pressure
+    """)
 
-# Correlation Heatmap
-st.subheader("Weather Correlation Heatmap")
+with col2:
+    # Correlation Heatmap
+    st.subheader("Weather Correlation Heatmap")
 
-# Select weather-related columns for correlation
-corr_columns = [
-    'Total_GMV', 'tavg', 'prcp', 'wspd', 'pres'
-]
+    # Select weather-related columns for correlation
+    corr_columns = [
+        'Total_GMV', 'tavg', 'prcp', 'wspd', 'pres'
+    ]
 
-# Filter out columns that don't exist in the DataFrame
-corr_columns = [col for col in corr_columns if col in df.columns]
+    # Filter out columns that don't exist in the DataFrame
+    corr_columns = [col for col in corr_columns if col in df.columns]
 
-# Create and display correlation heatmap
-corr_heatmap = create_correlation_heatmap(df, corr_columns)
-st.plotly_chart(corr_heatmap, use_container_width=True)
+    # Create and display correlation heatmap
+    corr_heatmap = create_correlation_heatmap(df, corr_columns)
+    st.plotly_chart(corr_heatmap, use_container_width=True)
 
 # Insights section
 st.subheader("Key Insights")
