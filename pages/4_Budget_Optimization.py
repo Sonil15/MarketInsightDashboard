@@ -66,45 +66,68 @@ st.plotly_chart(fig1, use_container_width=True)
 # Chart 2: Optym Model Channel Budget Allocation
 st.subheader("Optym Model Channel Budget Allocation")
 
-# Load merged file data for Optym channel allocation
+# Load data for April 2024
 optym_data = pd.read_csv('attached_assets/merged_file.csv')
+april_data = optym_data.iloc[1]  # Second row is April 2024
 
-# Select only the baseline columns needed
-baseline_columns = [col for col in optym_data.columns if '_baseline' in col and 'Unnamed' not in col and 'Total' not in col]
+# Define channels and get their baseline and optimized values
+channels = ['Digital', 'Sponsorship', 'Content Marketing', 'in Online marketing', 'Affiliates', 'SEM', 'Radio', 'Other']
+baseline_values = [april_data[f"{channel}_baseline"] for channel in channels]
+optimized_values = [april_data[f"{channel}_optimized"] for channel in channels]
 
-# Calculate the average for each channel across all time periods
-channel_averages = {}
-for col in baseline_columns:
-    channel_name = col.replace('_baseline', '')
-    channel_averages[channel_name] = optym_data[col].mean()
+# Calculate percentage changes
+pct_changes = [((opt - base) / base * 100) if base != 0 else 0 
+               for base, opt in zip(baseline_values, optimized_values)]
 
-# Create dataframe for the bar chart
-channels = list(channel_averages.keys())
-values = list(channel_averages.values())
-
-optym_df = pd.DataFrame({'Channel': channels, 'Budget': values})
-
-# Create clustered bar chart for Optym channels
+# Create the figure
 fig2 = go.Figure()
 
-# Add bars for each channel
+# Add baseline bars
 fig2.add_trace(go.Bar(
-    x=optym_df['Channel'],
-    y=optym_df['Budget'],
-    marker_color=BLUE_PALETTE[1],
-    text=optym_df['Budget'].round(2),
-    textposition='outside'
+    name='Baseline',
+    x=channels,
+    y=baseline_values,
+    marker_color='navy',
 ))
+
+# Add optimized bars
+fig2.add_trace(go.Bar(
+    name='Optimized',
+    x=channels,
+    y=optimized_values,
+    marker_color='royalblue',
+))
+
+# Add percentage change annotations
+for i, (pct, baseline, optimized) in enumerate(zip(pct_changes, baseline_values, optimized_values)):
+    if baseline != 0 or optimized != 0:  # Only add annotation if there's a bar
+        fig2.add_annotation(
+            x=i,
+            y=max(baseline, optimized),
+            text=f"{pct:.1f}%",
+            showarrow=False,
+            yshift=10,
+            font=dict(size=10)
+        )
 
 # Update layout
 fig2.update_layout(
-    title='Optym Model: Average Channel Budget Allocation',
+    title='Marketing Spend Allocation - Apr 2024',
     xaxis_title='Marketing Channel',
-    yaxis_title='Budget',
+    yaxis_title='Spend',
+    barmode='group',
     plot_bgcolor='white',
     font=dict(color='#424242'),
-    margin=dict(l=10, r=10, t=30, b=10),
-    hovermode='closest'
+    showlegend=True,
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.02,
+        xanchor='right',
+        x=1
+    ),
+    margin=dict(l=10, r=10, t=60, b=10),
+    yaxis=dict(gridcolor='lightgrey'),
 )
 
 st.plotly_chart(fig2, use_container_width=True)
