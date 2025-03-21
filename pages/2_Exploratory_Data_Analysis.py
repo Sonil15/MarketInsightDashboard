@@ -100,14 +100,11 @@ while negative values indicate an inverse relationship.
 """)
 
 # Correlation Heatmap
-st.subheader("Correlation Heatmap")
+st.subheader("Weather Correlation Heatmap")
 
-# Select relevant columns for correlation
+# Select weather-related columns for correlation
 corr_columns = [
-    'Total_GMV', 'NPS', 'Stock Index', 
-    'TV', 'Digital', 'Sponsorship', 'Online marketing', ' Affiliates', 'SEM',
-    'tavg', 'prcp', 'wspd', 'pres',
-    'CLV', 'CAC', 'ROI'
+    'Total_GMV', 'tavg', 'prcp', 'wspd', 'pres'
 ]
 
 # Filter out columns that don't exist in the DataFrame
