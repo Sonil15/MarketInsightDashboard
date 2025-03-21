@@ -82,32 +82,30 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# Create columns for weather correlation charts
-col1, col2 = st.columns(2)
+# Weather Factors Correlation with GMV
+st.subheader("Weather Factors Correlation with Total GMV")
+weather_corr_chart = create_weather_correlation_chart(df)
+st.plotly_chart(weather_corr_chart, use_container_width=True)
 
-with col1:
-    # Weather Factors Correlation with GMV
-    st.subheader("Weather Factors Correlation with Total GMV")
-    weather_corr_chart = create_weather_correlation_chart(df)
-    st.plotly_chart(weather_corr_chart, use_container_width=True)
+# Explanation
+st.markdown("""
+This chart shows the correlation between various weather factors and total GMV:
+- **tavg**: Average temperature
+- **prcp**: Precipitation
+- **wspd**: Wind speed
+- **pres**: Atmospheric pressure
 
-    # Explanation
-    st.markdown("""
-    This chart shows the correlation between various weather factors and total GMV:
-    - **tavg**: Average temperature
-    - **prcp**: Precipitation
-    - **wspd**: Wind speed
-    - **pres**: Atmospheric pressure
-    """)
+Positive values indicate a positive correlation (as one increases, so does the other),
+while negative values indicate an inverse relationship.
+""")
 
-with col2:
-    # Correlation Heatmap
-    st.subheader("Weather Correlation Heatmap")
+# Correlation Heatmap
+st.subheader("Weather Correlation Heatmap")
 
-    # Select weather-related columns for correlation
-    corr_columns = [
-        'Total_GMV', 'tavg', 'prcp', 'wspd', 'pres'
-    ]
+# Select weather-related columns for correlation
+corr_columns = [
+    'Total_GMV', 'tavg', 'prcp', 'wspd', 'pres'
+]
 
 # Filter out columns that don't exist in the DataFrame
 corr_columns = [col for col in corr_columns if col in df.columns]
