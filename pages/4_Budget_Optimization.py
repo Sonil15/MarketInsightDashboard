@@ -194,43 +194,89 @@ with tab1:
     
     # Load and prepare Robyn budget data
     robyn_budget_data = pd.read_csv('attached_assets/Robyn_marketing_budget_allocation.csv')
-    budget_comparison = pd.melt(
-        robyn_budget_data,
-        id_vars=['Channel'],
-        value_vars=['Original_Budget', 'New_Budget'],
-        var_name='Budget Type',
-        value_name='Budget'
-    )
     
-    # Create clustered bar chart
-    fig = px.bar(
-        budget_comparison,
-        x='Channel',
-        y='Budget',
-        color='Budget Type',
+    # Create clustered bar chart for Robyn channels (as requested)
+    fig1 = go.Figure()
+    
+    # Add bars for original budget
+    fig1.add_trace(go.Bar(
+        x=robyn_budget_data['Channel'],
+        y=robyn_budget_data['Original_Budget'],
+        name='Original Budget',
+        marker_color=BLUE_PALETTE[0],
+        text=robyn_budget_data['Original_Budget'],
+        textposition='outside'
+    ))
+    
+    # Add bars for new budget
+    fig1.add_trace(go.Bar(
+        x=robyn_budget_data['Channel'],
+        y=robyn_budget_data['New_Budget'],
+        name='New Budget',
+        marker_color=BLUE_PALETTE[2],
+        text=robyn_budget_data['New_Budget'],
+        textposition='outside'
+    ))
+    
+    # Update layout
+    fig1.update_layout(
         title='Robyn Model: Channel Budget Comparison',
-        barmode='group',
-        color_discrete_sequence=[BLUE_PALETTE[0], BLUE_PALETTE[2]],
-        labels={'Budget': 'Budget (Million $)', 'Channel': 'Marketing Channel'},
-        text=budget_comparison['Budget'].round(1)
-    )
-    
-    fig.update_layout(
-        plot_bgcolor='white',
         xaxis_title='Marketing Channel',
         yaxis_title='Budget (Million $)',
-        hovermode='x unified',
-        legend_title='Budget Type',
-        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
-        showlegend=True,
         barmode='group',
+        plot_bgcolor='white',
+        font=dict(color='#424242'),
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+        margin=dict(l=10, r=10, t=30, b=10),
+        hovermode='x unified',
         bargap=0.2,
         bargroupgap=0.1
     )
     
-    fig.update_traces(textposition='outside')
+    st.plotly_chart(fig1, use_container_width=True)
     
-    st.plotly_chart(fig, use_container_width=True)
+    # Load merged file data for Optym channel allocation (the second requested chart)
+    optym_data = pd.read_csv('attached_assets/merged_file.csv')
+    
+    # Select only the baseline columns needed
+    baseline_columns = [col for col in optym_data.columns if '_baseline' in col and 'Unnamed' not in col and 'Total' not in col]
+    
+    # Calculate the average for each channel across all time periods
+    channel_averages = {}
+    for col in baseline_columns:
+        channel_name = col.replace('_baseline', '')
+        channel_averages[channel_name] = optym_data[col].mean()
+    
+    # Create dataframe for the bar chart
+    channels = list(channel_averages.keys())
+    values = list(channel_averages.values())
+    
+    optym_df = pd.DataFrame({'Channel': channels, 'Budget': values})
+    
+    # Create clustered bar chart for Optym channels
+    fig2 = go.Figure()
+    
+    # Add bars for each channel
+    fig2.add_trace(go.Bar(
+        x=optym_df['Channel'],
+        y=optym_df['Budget'],
+        marker_color=BLUE_PALETTE[1],
+        text=optym_df['Budget'].round(2),
+        textposition='outside'
+    ))
+    
+    # Update layout
+    fig2.update_layout(
+        title='Optym Model: Average Channel Budget Allocation',
+        xaxis_title='Marketing Channel',
+        yaxis_title='Budget',
+        plot_bgcolor='white',
+        font=dict(color='#424242'),
+        margin=dict(l=10, r=10, t=30, b=10),
+        hovermode='closest'
+    )
+    
+    st.plotly_chart(fig2, use_container_width=True)
     
     # Show example of max response allocation
     st.image("attached_assets/1_190_4_reallocated_best_roas.png")
@@ -243,49 +289,195 @@ with tab2:
     The Target Efficiency model optimizes budget to meet specific ROAS targets for each channel.
     """)
     
+    # Load merged file data for Optym channel comparison (baseline vs optimized)
+    optym_data = pd.read_csv('attached_assets/merged_file.csv')
+    
+    # Create lists for channel names, baseline values, and optimized values
+    channels = []
+    baseline_values = []
+    optimized_values = []
+    
+    # Process the data to extract channel comparison values
+    for i, col in enumerate(optym_data.columns):
+        if '_baseline' in col and 'Unnamed' not in col and 'Total' not in col:
+            channel_name = col.replace('_baseline', '')
+            channels.append(channel_name)
+            baseline_values.append(optym_data[col].mean())
+            
+            # Find corresponding optimized column
+            optimized_col = col.replace('_baseline', '_optimized')
+            if optimized_col in optym_data.columns:
+                optimized_values.append(optym_data[optimized_col].mean())
+            else:
+                optimized_values.append(0)  # Fallback if no matching optimized column
+    
+    # Create a dataframe for the comparison chart
+    comparison_df = pd.DataFrame({
+        'Channel': channels,
+        'Baseline Budget': baseline_values,
+        'Optimized Budget': optimized_values
+    })
+    
+    # Melt the dataframe for plotting
+    comparison_melted = pd.melt(
+        comparison_df,
+        id_vars=['Channel'],
+        value_vars=['Baseline Budget', 'Optimized Budget'],
+        var_name='Budget Type',
+        value_name='Budget Value'
+    )
+    
+    # Create clustered bar chart comparing baseline and optimized budgets
+    fig = go.Figure()
+    
+    # Add bars for baseline budget
+    fig.add_trace(go.Bar(
+        x=comparison_melted[comparison_melted['Budget Type'] == 'Baseline Budget']['Channel'],
+        y=comparison_melted[comparison_melted['Budget Type'] == 'Baseline Budget']['Budget Value'],
+        name='Baseline Budget',
+        marker_color=BLUE_PALETTE[0],
+        text=comparison_melted[comparison_melted['Budget Type'] == 'Baseline Budget']['Budget Value'].round(2),
+        textposition='outside'
+    ))
+    
+    # Add bars for optimized budget
+    fig.add_trace(go.Bar(
+        x=comparison_melted[comparison_melted['Budget Type'] == 'Optimized Budget']['Channel'],
+        y=comparison_melted[comparison_melted['Budget Type'] == 'Optimized Budget']['Budget Value'],
+        name='Optimized Budget',
+        marker_color=BLUE_PALETTE[2],
+        text=comparison_melted[comparison_melted['Budget Type'] == 'Optimized Budget']['Budget Value'].round(2),
+        textposition='outside'
+    ))
+    
+    # Update layout
+    fig.update_layout(
+        title='Optym Model: Baseline vs Optimized Budget Comparison',
+        xaxis_title='Marketing Channel',
+        yaxis_title='Budget Value',
+        barmode='group',
+        plot_bgcolor='white',
+        font=dict(color='#424242'),
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+        margin=dict(l=10, r=10, t=30, b=10),
+        hovermode='x unified',
+        bargap=0.2,
+        bargroupgap=0.1
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
     # Show example of target efficiency allocation
     st.image("attached_assets/1_190_4_reallocated_target_roas.png")
 
-# Channel ROAS Comparison
-st.subheader("Channel ROAS Comparison")
+# Feature Importance Analysis
+st.subheader("Channel Feature Importance by Product Category")
 
-# Create synthetic channel ROAS data for comparison
-channels = ['TV', 'Digital', 'Sponsorship', 'Content Marketing', 
-            'Online Marketing', 'Affiliates', 'SEM', 'Radio', 'Other']
+# Load feature importance data
+feature_importance = pd.read_csv('attached_assets/feature_importance_values.csv')
 
-# Create a dataframe with channel ROAS for both models
-channel_roas = pd.DataFrame({
-    'Channel': channels,
-    'Optym ROAS': np.random.uniform(1.5, 6.0, len(channels)),  # Synthetic data
-    'Robyn ROAS': np.random.uniform(1.5, 6.0, len(channels))       # Synthetic data
-})
+# Prepare data for visualization
+feature_importance = feature_importance.set_index('Unnamed: 0', drop=True) if 'Unnamed: 0' in feature_importance.columns else feature_importance.iloc[:, 1:].set_index(feature_importance.iloc[:, 0])
 
-# Melt the dataframe for easier plotting
-melted_roas = pd.melt(
-    channel_roas,
-    id_vars=['Channel'],
-    value_vars=['Optym ROAS', 'Robyn ROAS'],
-    var_name='Model',
-    value_name='ROAS'
-)
+# Transpose for better visualization
+feature_importance_t = feature_importance.transpose()
 
-# Create grouped bar chart
-fig = px.bar(
-    melted_roas,
-    x='Channel',
-    y='ROAS',
-    color='Model',
-    barmode='group',
-    title='Channel ROAS Comparison: Optym vs Robyn',
-    color_discrete_sequence=[BLUE_PALETTE[0], BLUE_PALETTE[2]]
+# Create heatmap of feature importance values by product
+fig = px.imshow(
+    feature_importance,
+    labels=dict(x="Marketing Channel", y="Product Category", color="Importance Score"),
+    x=feature_importance.columns,
+    y=feature_importance.index,
+    color_continuous_scale=['#e3f2fd', '#bbdefb', '#90caf9', '#64b5f6', '#42a5f5', '#2196f3', '#1e88e5', '#1976d2', '#1565c0', '#0d47a1'],
+    title="Feature Importance by Product Category and Marketing Channel"
 )
 
 fig.update_layout(
     plot_bgcolor='white',
+    paper_bgcolor='white',
+    font=dict(color='#424242'),
+    margin=dict(l=10, r=10, t=50, b=10),
+    coloraxis_colorbar=dict(
+        title="Importance",
+        thicknessmode="pixels", thickness=20,
+        lenmode="pixels", len=300,
+        ticks="outside"
+    )
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+# Create a bar chart showing channel importance across all product categories
+channel_importance = feature_importance.mean(axis=0).reset_index()
+channel_importance.columns = ['Channel', 'Average Importance']
+channel_importance = channel_importance.sort_values('Average Importance', ascending=False)
+
+fig = px.bar(
+    channel_importance,
+    x='Channel',
+    y='Average Importance',
+    color='Average Importance',
+    color_continuous_scale=['#e3f2fd', '#bbdefb', '#90caf9', '#64b5f6', '#42a5f5', '#2196f3', '#1e88e5', '#1976d2'],
+    title='Average Channel Importance Across All Product Categories',
+    text='Average Importance'
+)
+
+fig.update_traces(
+    texttemplate='%{text:.3f}',
+    textposition='outside'
+)
+
+fig.update_layout(
+    plot_bgcolor='white',
+    paper_bgcolor='white',
+    font=dict(color='#424242'),
     xaxis_title='Marketing Channel',
-    yaxis_title='ROAS',
-    hovermode='closest',
-    legend_title='Model'
+    yaxis_title='Average Importance Score',
+    coloraxis_showscale=False,
+    margin=dict(l=10, r=10, t=50, b=10)
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+# Channel ROAS Analysis
+st.subheader("Channel ROAS Analysis")
+
+# Calculate the actual ROAS using product revenue and budget data
+st.markdown("""
+This analysis uses the Robyn model data to calculate and compare the Return on Ad Spend (ROAS) for each marketing channel.
+The ROAS values represent the revenue generated for each dollar spent in that marketing channel.
+""")
+
+# Load the Robyn data which has Revenue_Lift per channel
+robyn_data = pd.read_csv('attached_assets/Robyn_marketing_budget_allocation.csv')
+
+# Display the Revenue per Dollar metric which is already in the data
+robyn_roas = robyn_data[['Channel', 'Revenue_per_Dollar']].copy()
+robyn_roas = robyn_roas.sort_values('Revenue_per_Dollar', ascending=False)
+
+fig = px.bar(
+    robyn_roas,
+    x='Channel',
+    y='Revenue_per_Dollar',
+    color='Revenue_per_Dollar',
+    color_continuous_scale=px.colors.sequential.Blues,
+    title='ROAS by Marketing Channel (Robyn Model)',
+    text='Revenue_per_Dollar'
+)
+
+fig.update_traces(
+    texttemplate='%{text:,.0f}',
+    textposition='outside'
+)
+
+fig.update_layout(
+    plot_bgcolor='white',
+    paper_bgcolor='white',
+    font=dict(color='#424242'),
+    xaxis_title='Marketing Channel',
+    yaxis_title='Revenue per Dollar Spent ($)',
+    coloraxis_showscale=False,
+    margin=dict(l=10, r=10, t=50, b=10)
 )
 
 st.plotly_chart(fig, use_container_width=True)
