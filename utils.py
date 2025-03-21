@@ -7,9 +7,12 @@ from plotly.subplots import make_subplots
 import ast
 import re
 
-# Set blue color theme
-BLUE_PALETTE = ['#1E88E5', '#42A5F5', '#64B5F6', '#90CAF9', '#BBDEFB', '#E3F2FD', '#2196F3', '#0D47A1', '#1976D2', '#0288D1']
-SINGLE_BLUE = '#1E88E5'
+# Set blue color theme with enhanced gradient
+BLUE_PALETTE = ['#0D47A1', '#1565C0', '#1976D2', '#1E88E5', '#2196F3', '#42A5F5', '#64B5F6', '#90CAF9', '#BBDEFB', '#E3F2FD']
+SINGLE_BLUE = '#1976D2'
+# Highlight colors for important elements
+HIGHLIGHT_BLUE = '#01579B'
+ACCENT_BLUE = '#29B6F6'
 
 @st.cache_data
 def load_merged_data():
