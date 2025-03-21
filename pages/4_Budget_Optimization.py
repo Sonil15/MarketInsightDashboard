@@ -33,7 +33,7 @@ robyn_target_efficiency = load_robyn_target_efficiency()
 
 # Page title
 st.title("Budget Optimization Analysis")
-st.markdown("This dashboard compares the performance of two budget optimization models: Sarvottam and Robyn MMM.")
+st.markdown("This dashboard compares the performance of two budget optimization models: Optym and Robyn MMM.")
 
 # Overall Model Comparison
 st.subheader("Overall Model Comparison")
@@ -62,8 +62,8 @@ with tab2:
     col1, col2 = st.columns(2)
     
     with col1:
-        sarvottam_allocation = create_sarvottam_channel_allocation(optimized_spend)
-        st.plotly_chart(sarvottam_allocation, use_container_width=True)
+        optym_allocation = create_optym_channel_allocation(optimized_spend)
+        st.plotly_chart(optym_allocation, use_container_width=True)
     
     with col2:
         robyn_allocation = create_robyn_channel_allocation(robyn_max_response)
@@ -75,8 +75,8 @@ with tab2:
     Note the different channel prioritization between the two models.
     """)
 
-# Sarvottam Model Details
-st.subheader("Sarvottam Model Performance")
+# Optym Model Details
+st.subheader("Optym Model Performance")
 
 # Create columns for metrics
 col1, col2, col3 = st.columns(3)
@@ -165,7 +165,7 @@ fig = px.bar(
     product_improvements_df,
     x='Product',
     y='Improvement %',
-    title='Sarvottam Model: Revenue Improvement by Product Category',
+    title='Optym Model: Revenue Improvement by Product Category',
     color_discrete_sequence=[BLUE_PALETTE[0]]
 )
 
@@ -216,7 +216,7 @@ channels = ['TV', 'Digital', 'Sponsorship', 'Content Marketing',
 # Create a dataframe with channel ROAS for both models
 channel_roas = pd.DataFrame({
     'Channel': channels,
-    'Sarvottam ROAS': np.random.uniform(1.5, 6.0, len(channels)),  # Synthetic data
+    'Optym ROAS': np.random.uniform(1.5, 6.0, len(channels)),  # Synthetic data
     'Robyn ROAS': np.random.uniform(1.5, 6.0, len(channels))       # Synthetic data
 })
 
@@ -236,7 +236,7 @@ fig = px.bar(
     y='ROAS',
     color='Model',
     barmode='group',
-    title='Channel ROAS Comparison: Sarvottam vs Robyn',
+    title='Channel ROAS Comparison: Optym vs Robyn',
     color_discrete_sequence=[BLUE_PALETTE[0], BLUE_PALETTE[2]]
 )
 
@@ -256,10 +256,10 @@ st.subheader("Conclusion and Recommendations")
 st.markdown("""
 ### Key Findings
 
-1. **Model Performance**: Both Sarvottam and Robyn models show significant revenue improvement potential.
+1. **Model Performance**: Both Optym and Robyn models show significant revenue improvement potential.
 
 2. **Channel Prioritization**:
-   - Sarvottam model prioritizes Digital, Sponsorship, and SEM channels
+   - Optym model prioritizes Digital, Sponsorship, and SEM channels
    - Robyn model focuses on Sponsorship, Online Marketing, and Affiliates
 
 3. **Product Impact**: The optimization impact varies across product categories.

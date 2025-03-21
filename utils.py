@@ -429,7 +429,7 @@ def create_budget_comparison_chart(optimized_df, overall_revenue_df, robyn_df, t
     
     return fig
 
-def create_sarvottam_channel_allocation(optimized_df):
+def create_optym_channel_allocation(optimized_df):
     """Create a chart showing channel allocation in the Sarvottam model"""
     
     # Get channel names and average allocation - match exact column names from CSV
@@ -444,7 +444,7 @@ def create_sarvottam_channel_allocation(optimized_df):
     allocation = allocation.sort_values('Allocation', ascending=False)
     
     fig = px.bar(allocation, x='Channel', y='Allocation',
-                title='Sarvottam Model: Channel Allocation',
+                title='Optym Model: Channel Allocation',
                 color_discrete_sequence=BLUE_PALETTE)
     
     fig.update_layout(
