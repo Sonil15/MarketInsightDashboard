@@ -397,7 +397,7 @@ def create_budget_comparison_chart(optimized_df, overall_revenue_df, robyn_df, t
         if channel_row is not None:
             robyn_data[channel] = {
                 'spend': channel_row['initSpendUnit'],
-                'response': channel_row['outVarValue']
+                'response': channel_row['optmResponseUnit']
             }
     
     # Create comparison dataframe

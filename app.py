@@ -9,6 +9,33 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Add CSS for rounded corner boxes
+st.markdown("""
+<style>
+    div.stPlotlyChart, div.stText, div.stMarkdown, div.stNumber, div.stDataFrame, div.stSelectbox, div.stMultiselect {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e6e6e6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        margin-bottom: 15px;
+    }
+    div[data-testid="stMetricValue"] {
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-radius: 10px;
+        border: 1px solid #e6e6e6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    div[data-testid="stHeader"] {
+        background-color: transparent;
+    }
+    div.block-container {
+        padding-top: 2rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Load data
 df = load_merged_data()
 
