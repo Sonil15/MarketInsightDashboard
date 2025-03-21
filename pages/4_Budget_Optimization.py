@@ -255,7 +255,7 @@ channel_roas = pd.DataFrame({
 melted_roas = pd.melt(
     channel_roas,
     id_vars=['Channel'],
-    value_vars=['Sarvottam ROAS', 'Robyn ROAS'],
+    value_vars=['Optym ROAS', 'Robyn ROAS'],
     var_name='Model',
     value_name='ROAS'
 )

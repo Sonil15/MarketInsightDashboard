@@ -374,20 +374,20 @@ def create_nps_stock_chart(df):
     return fig
 
 def create_budget_comparison_chart(optimized_df, overall_revenue_df, robyn_df, title):
-    """Create a comparison chart for Sarvottam and Robyn budget optimization models"""
+    """Create a comparison chart for Optym and Robyn budget optimization models"""
     
-    # Process Sarvottam Model data (using the first few rows from optimized_df and overall_revenue_df)
+    # Process Optym Model data (using the first few rows from optimized_df and overall_revenue_df)
     # Column names in the CSV file have spaces in them, so we need to match exactly
-    sarvottam_channels = ['TV', 'Digital', 'Sponsorship', 'Content Marketing', 
+    optym_channels = ['TV', 'Digital', 'Sponsorship', 'Content Marketing', 
                           'Online marketing', ' Affiliates', 'SEM', 'Radio', 'Other']
     
     # Take average of first 12 rows as representative data
-    sarvottam_spend = optimized_df.iloc[:12][sarvottam_channels].mean().values
+    optym_spend = optimized_df.iloc[:12][optym_channels].mean().values
     
     # Get baseline and optimized revenue
-    sarvottam_baseline_revenue = overall_revenue_df['baseline'].iloc[0]
-    sarvottam_optimized_revenue = overall_revenue_df['optimized'].iloc[0]
-    sarvottam_improvement = overall_revenue_df['improvement_pct'].iloc[0]
+    optym_baseline_revenue = overall_revenue_df['baseline'].iloc[0]
+    optym_optimized_revenue = overall_revenue_df['optimized'].iloc[0]
+    optym_improvement = overall_revenue_df['improvement_pct'].iloc[0]
     
     # Process Robyn Model data
     # Extract Affiliates, Online Marketing and Sponsorship from the Robyn data
@@ -405,8 +405,8 @@ def create_budget_comparison_chart(optimized_df, overall_revenue_df, robyn_df, t
     
     # Create comparison dataframe
     model_comparison = {
-        'Model': ['Sarvottam', 'Robyn MMM'],
-        'Revenue Improvement (%)': [sarvottam_improvement, 30]  # Using 30% as example for Robyn
+        'Model': ['Optym', 'Robyn MMM'],
+        'Revenue Improvement (%)': [optym_improvement, 30]  # Using 30% as example for Robyn
     }
     
     comparison_df = pd.DataFrame(model_comparison)
