@@ -1,26 +1,11 @@
-
 [server]
 headless = true
 address = "0.0.0.0"
 port = 5000
-enableXsrfProtection = false
 
 [theme]
-primaryColor = "#1E88E5"
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F0F2F6"
-textColor = "#000000"
+primaryColor = "#1e88e5"
+backgroundColor = "#f5f9ff"
+secondaryBackgroundColor = "#e3f2fd"
+textColor = "#212121"
 font = "sans serif"
-base = "light"
-
-[browser]
-gatherUsageStats = false
-
-[client]
-showErrorDetails = false
-
-[markdown]
-codeCopyButton = true
-
-[deprecation]
-showPyplotGlobalUse = false
