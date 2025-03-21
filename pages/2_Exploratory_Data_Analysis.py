@@ -112,7 +112,7 @@ with col2:
 # Filter out columns that don't exist in the DataFrame
 corr_columns = [col for col in corr_columns if col in df.columns]
 
-# Create and display correlation heatmap
+# Create correlation heatmap within col2
 corr_heatmap = create_correlation_heatmap(df, corr_columns)
 st.plotly_chart(corr_heatmap, use_container_width=True)
 
