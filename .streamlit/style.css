@@ -1,15 +1,32 @@
 
 /* Box styling for plots and metrics */
-[data-testid="stMetric"], [data-testid="stMetricValue"] {
+div[data-testid="stMetric"] {
     background-color: #ffffff;
     border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
 }
 
-.element-container [data-testid="stPlotlyChart"] {
+div.element-container div[data-testid="stPlotlyChart"] {
     background-color: #ffffff;
     border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+}
+
+/* Add some spacing between elements */
+div.block-container {
+    padding-top: 2rem;
+}
+
+/* Style the metric value and delta */
+div[data-testid="stMetricValue"] {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+div[data-testid="stMetricDelta"] {
+    font-size: 1rem;
 }
