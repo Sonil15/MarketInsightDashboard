@@ -36,16 +36,7 @@ The scatter plot above shows the relationship between NPS (Net Promoter Score) a
 The trend line indicates the general relationship between customer satisfaction and sales.
 """)
 
-# Stock Index vs GMV Plot
-st.subheader("Stock Index vs GMV")
-stock_gmv_chart = create_stock_gmv_chart(df)
-st.plotly_chart(stock_gmv_chart, use_container_width=True)
 
-# Explanation
-st.markdown("""
-This scatter plot explores the relationship between the stock index and total GMV.
-It helps understand how market performance correlates with sales.
-""")
 
 # Marketing Channel Investment
 st.subheader("Monthly Investment by Marketing Channel")
