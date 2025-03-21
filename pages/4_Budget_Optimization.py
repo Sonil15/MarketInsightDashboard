@@ -131,3 +131,49 @@ fig2.update_layout(
 )
 
 st.plotly_chart(fig2, use_container_width=True)
+
+# Feature Importance Chart
+st.subheader("Product-wise Feature Importance by Marketing Channel")
+
+# Load feature importance data
+feature_data = pd.read_csv('attached_assets/feature_importance_values.csv', index_col=0)
+
+# Create stacked bar chart
+fig3 = go.Figure()
+
+colors = ['navy', 'royalblue', 'cornflowerblue', 'lightsteelblue', 'powderblue']
+products = feature_data.index
+
+# Add traces for each product
+for i, product in enumerate(products):
+    fig3.add_trace(go.Bar(
+        name=product,
+        x=feature_data.columns,
+        y=feature_data.loc[product],
+        marker_color=colors[i]
+    ))
+
+# Update layout
+fig3.update_layout(
+    barmode='stack',
+    title='Product-wise Feature Importance by Marketing Channel',
+    xaxis_title='Marketing Channels',
+    yaxis_title='Feature Importance',
+    plot_bgcolor='white',
+    showlegend=True,
+    legend_title='Products',
+    legend=dict(
+        orientation='h',
+        yanchor='bottom',
+        y=1.02,
+        xanchor='right',
+        x=1
+    ),
+    margin=dict(l=10, r=10, t=60, b=10),
+    yaxis=dict(
+        gridcolor='lightgrey',
+        range=[0, 2.5]
+    )
+)
+
+st.plotly_chart(fig3, use_container_width=True)
