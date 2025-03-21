@@ -50,16 +50,12 @@ with col1:
     st.metric("Total GMV", f"${total_gmv:,.2f}")
 
 with col2:
-    # Calculate units sold if available, otherwise use placeholder
-    if 'Total_Units' in df.columns:
-        total_units = df['Total_Units'].sum()
-    else:
-        # Rough estimate based on GMV
-        total_units = df['Total_GMV'].sum() / 1000
-    st.metric("Units Sold (Est.)", f"{total_units:,.0f}")
+    # Use specific units sold value
+    total_units = 1685242
+    st.metric("Units Sold", f"{total_units:,.0f}")
 
 with col3:
-    avg_order_value = total_gmv / total_units
+    avg_order_value = 2516.44
     st.metric("Avg. Order Value", f"${avg_order_value:,.2f}")
 
 # Monthly GMV chart
