@@ -173,7 +173,6 @@ def create_nps_gmv_chart(df):
                     title='NPS vs Total GMV',
                     color_discrete_sequence=[SINGLE_BLUE],
                     labels={'NPS': 'NPS Score', 'Total_GMV': 'Total GMV'},
-                    trendline='ols',
                     hover_data=['YearMonth'])
     
     fig.update_layout(
@@ -182,9 +181,6 @@ def create_nps_gmv_chart(df):
         yaxis_title='Total GMV',
         hovermode='closest'
     )
-    
-    # Change trendline color
-    fig.data[1].line.color = '#FF6B6B'
     
     return fig
 
@@ -195,7 +191,6 @@ def create_stock_gmv_chart(df):
                     title='Stock Index vs Total GMV',
                     color_discrete_sequence=[SINGLE_BLUE],
                     labels={'Stock Index': 'Stock Index', 'Total_GMV': 'Total GMV'},
-                    trendline='ols',
                     hover_data=['YearMonth'])
     
     fig.update_layout(
@@ -204,9 +199,6 @@ def create_stock_gmv_chart(df):
         yaxis_title='Total GMV',
         hovermode='closest'
     )
-    
-    # Change trendline color
-    fig.data[1].line.color = '#FF6B6B'
     
     return fig
 
@@ -382,8 +374,9 @@ def create_budget_comparison_chart(optimized_df, overall_revenue_df, robyn_df, t
     """Create a comparison chart for Sarvottam and Robyn budget optimization models"""
     
     # Process Sarvottam Model data (using the first few rows from optimized_df and overall_revenue_df)
+    # Column names in the CSV file have spaces in them, so we need to match exactly
     sarvottam_channels = ['TV', 'Digital', 'Sponsorship', 'Content Marketing', 
-                          'Online Marketing', 'Affiliates', 'SEM', 'Radio', 'Other']
+                          'Online marketing', ' Affiliates', 'SEM', 'Radio', 'Other']
     
     # Take average of first 12 rows as representative data
     sarvottam_spend = optimized_df.iloc[:12][sarvottam_channels].mean().values
@@ -436,9 +429,9 @@ def create_budget_comparison_chart(optimized_df, overall_revenue_df, robyn_df, t
 def create_sarvottam_channel_allocation(optimized_df):
     """Create a chart showing channel allocation in the Sarvottam model"""
     
-    # Get channel names and average allocation
+    # Get channel names and average allocation - match exact column names from CSV
     channels = ['TV', 'Digital', 'Sponsorship', 'Content Marketing', 
-                'Online Marketing', 'Affiliates', 'SEM', 'Radio', 'Other']
+                'Online marketing', ' Affiliates', 'SEM', 'Radio', 'Other']
     
     # Calculate average allocation for first 12 months
     allocation = optimized_df.iloc[:12][channels].mean().reset_index()

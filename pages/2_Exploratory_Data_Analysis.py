@@ -114,7 +114,7 @@ st.subheader("Correlation Heatmap")
 # Select relevant columns for correlation
 corr_columns = [
     'Total_GMV', 'NPS', 'Stock Index', 
-    'TV', 'Digital', 'Sponsorship', 'Online Marketing', 'Affiliates', 'SEM',
+    'TV', 'Digital', 'Sponsorship', 'Online marketing', ' Affiliates', 'SEM',
     'tavg', 'prcp', 'wspd', 'pres',
     'CLV', 'CAC', 'ROI'
 ]
