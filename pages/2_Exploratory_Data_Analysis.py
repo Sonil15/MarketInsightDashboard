@@ -93,7 +93,7 @@ with col1:
 
     # Explanation
     st.markdown("""
-    These:
+    This chart shows the correlation between various weather factors and total GMV:
     - **tavg**: Average temperature
     - **prcp**: Precipitation
     - **wspd**: Wind speed
