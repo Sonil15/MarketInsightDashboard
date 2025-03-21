@@ -35,75 +35,6 @@ robyn_target_efficiency = load_robyn_target_efficiency()
 st.title("Budget Optimization Analysis")
 st.markdown("This dashboard compares the performance of two budget optimization models: Sarvottam and Robyn MMM.")
 
-# Add top metrics with delta values like in main app
-col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
-
-with col1:
-    # Calculate average improvement percentage for Sarvottam model
-    sarvottam_improvement = overall_revenue['improvement_pct'].mean()
-    st.metric("Sarvottam Improvement", 
-              f"{sarvottam_improvement:.2f}%", 
-              delta="+8.3% vs baseline",
-              delta_color="normal")
-
-with col2:
-    # Calculate average improvement for Robyn model (simulated)
-    robyn_improvement = 12.7  # Example value
-    st.metric("Robyn Improvement", 
-              f"{robyn_improvement:.2f}%", 
-              delta="+5.1% vs baseline",
-              delta_color="normal")
-
-with col3:
-    # Calculate total optimized budget
-    total_budget = optimized_spend['total'].sum()
-    st.metric("Total Budget", 
-              f"${total_budget:,.2f}", 
-              delta="+2.4% reallocation",
-              delta_color="normal")
-
-with col4:
-    # Create a gauge chart for ROI improvement
-    import plotly.graph_objects as go
-    
-    # ROI improvement data
-    roi_improvement = 22.4  # ROI improvement percentage
-    
-    # Create the gauge chart
-    fig = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=roi_improvement,
-        title={"text": "ROI Improvement %", "font": {"size": 14, "color": "#616161"}},
-        gauge={
-            "axis": {"range": [0, 50], "tickwidth": 1, "tickcolor": "#616161"},
-            "bar": {"color": "#1e88e5"},
-            "bgcolor": "white",
-            "borderwidth": 0,
-            "bordercolor": "white",
-            "steps": [
-                {"range": [0, 15], "color": "#e3f2fd"},
-                {"range": [15, 30], "color": "#bbdefb"},
-                {"range": [30, 50], "color": "#90caf9"}
-            ],
-            "threshold": {
-                "line": {"color": "green", "width": 4},
-                "thickness": 0.75,
-                "value": 20
-            }
-        }
-    ))
-    
-    # Update layout
-    fig.update_layout(
-        height=120,
-        margin=dict(l=10, r=10, t=40, b=10),
-        paper_bgcolor="white",
-        font={"color": "#616161", "family": "Arial"}
-    )
-    
-    st.markdown("<div class='card-title'>ROI Improvement</div>", unsafe_allow_html=True)
-    st.plotly_chart(fig, use_container_width=True)
-
 # Overall Model Comparison
 st.subheader("Overall Model Comparison")
 
@@ -147,33 +78,23 @@ with tab2:
 # Sarvottam Model Details
 st.subheader("Sarvottam Model Performance")
 
-# Create columns for metrics with delta values
+# Create columns for metrics
 col1, col2, col3 = st.columns(3)
 
 with col1:
     # Calculate average baseline revenue
     avg_baseline = overall_revenue['baseline'].mean()
-    st.metric("Baseline Revenue", 
-              f"${avg_baseline:,.2f}", 
-              delta="Reference point",
-              delta_color="off")
+    st.metric("Avg. Baseline Revenue", f"${avg_baseline:,.2f}")
 
 with col2:
     # Calculate average optimized revenue
     avg_optimized = overall_revenue['optimized'].mean()
-    improvement_amount = avg_optimized - avg_baseline
-    st.metric("Optimized Revenue", 
-              f"${avg_optimized:,.2f}", 
-              delta=f"+${improvement_amount:,.2f}",
-              delta_color="normal")
+    st.metric("Avg. Optimized Revenue", f"${avg_optimized:,.2f}")
 
 with col3:
     # Calculate average improvement percentage
     avg_improvement_pct = overall_revenue['improvement_pct'].mean()
-    st.metric("Revenue Growth", 
-              f"{avg_improvement_pct:.2f}%", 
-              delta="Potential improvement",
-              delta_color="normal")
+    st.metric("Avg. Improvement %", f"{avg_improvement_pct:.2f}%")
 
 # Create line chart showing baseline vs optimized revenue
 overall_revenue['index'] = overall_revenue.index
@@ -329,60 +250,27 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# Conclusion and Recommendations with card styling
+# Conclusion and Recommendations
 st.subheader("Conclusion and Recommendations")
 
-col1, col2 = st.columns(2)
+st.markdown("""
+### Key Findings
 
-with col1:
-    st.markdown("""
-    <div style="background-color: white; padding: 1rem; border-radius: 8px; border: 1px solid #e6e6e6; height: 100%;">
-        <div style="font-weight: 500; color: #1e88e5; margin-bottom: 0.8rem; font-size: 1.1rem;">Key Findings</div>
-        <div style="color: #212121; font-size: 0.9rem;">
-            <ol style="padding-left: 1.2rem; margin-top: 0.5rem;">
-                <li style="margin-bottom: 0.8rem;">
-                    <span style="font-weight: 500; color: #424242;">Model Performance:</span> 
-                    Both Sarvottam and Robyn models show significant revenue improvement potential.
-                </li>
-                <li style="margin-bottom: 0.8rem;">
-                    <span style="font-weight: 500; color: #424242;">Channel Prioritization:</span>
-                    <ul style="padding-left: 1.2rem; margin-top: 0.4rem;">
-                        <li>Sarvottam model prioritizes Digital, Sponsorship, and SEM channels</li>
-                        <li>Robyn model focuses on Sponsorship, Online Marketing, and Affiliates</li>
-                    </ul>
-                </li>
-                <li style="margin-bottom: 0.8rem;">
-                    <span style="font-weight: 500; color: #424242;">Product Impact:</span> 
-                    The optimization impact varies across product categories.
-                </li>
-            </ol>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+1. **Model Performance**: Both Sarvottam and Robyn models show significant revenue improvement potential.
 
-with col2:
-    st.markdown("""
-    <div style="background-color: white; padding: 1rem; border-radius: 8px; border: 1px solid #e6e6e6; height: 100%;">
-        <div style="font-weight: 500; color: #1e88e5; margin-bottom: 0.8rem; font-size: 1.1rem;">Recommendations</div>
-        <div style="color: #212121; font-size: 0.9rem;">
-            <ol style="padding-left: 1.2rem; margin-top: 0.5rem;">
-                <li style="margin-bottom: 0.8rem;">
-                    <span style="font-weight: 500; color: #424242;">Hybrid Approach:</span> 
-                    Consider a hybrid budget allocation approach that leverages strengths from both models.
-                </li>
-                <li style="margin-bottom: 0.8rem;">
-                    <span style="font-weight: 500; color: #424242;">Channel Testing:</span>
-                    Test incremental changes in high-ROAS channels identified by both models.
-                </li>
-                <li style="margin-bottom: 0.8rem;">
-                    <span style="font-weight: 500; color: #424242;">Continuous Optimization:</span> 
-                    Implement a continuous optimization process to adapt to market changes.
-                </li>
-                <li style="margin-bottom: 0.8rem;">
-                    <span style="font-weight: 500; color: #424242;">Product-Specific Strategies:</span> 
-                    Develop tailored marketing strategies for products with higher optimization potential.
-                </li>
-            </ol>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+2. **Channel Prioritization**:
+   - Sarvottam model prioritizes Digital, Sponsorship, and SEM channels
+   - Robyn model focuses on Sponsorship, Online Marketing, and Affiliates
+
+3. **Product Impact**: The optimization impact varies across product categories.
+
+### Recommendations
+
+1. **Hybrid Approach**: Consider a hybrid budget allocation approach that leverages strengths from both models.
+
+2. **Channel Testing**: Test incremental changes in high-ROAS channels identified by both models.
+
+3. **Continuous Optimization**: Implement a continuous optimization process to adapt to market changes.
+
+4. **Product-Specific Strategies**: Develop tailored marketing strategies for products with higher optimization potential.
+""")
