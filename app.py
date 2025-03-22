@@ -9,4 +9,4 @@ st.set_page_config(
 )
 
 # Page title
-st.title("WELOME")
+st.title("WELCOME")
