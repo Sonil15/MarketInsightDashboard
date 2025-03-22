@@ -40,4 +40,5 @@ Thumbs.db
 
 # Keep these directories
 !attached_assets/
-!pages/ 
+!pages/
+!dashboard_images/ 
