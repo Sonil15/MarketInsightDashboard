@@ -52,14 +52,6 @@ selected_categories = st.sidebar.multiselect(
     default=product_categories
 )
 
-# Add month filter for product category breakdown
-all_months = df['YearMonth'].unique().tolist()
-selected_month = st.sidebar.selectbox(
-    "Select Month for Product Category Breakdown",
-    options=all_months,
-    index=len(all_months)-1  # Default to the latest month
-)
-
 # Top metrics
 col1, col2, col3 = st.columns(3)
 
@@ -83,7 +75,7 @@ st.plotly_chart(gmv_chart, use_container_width=True)
 
 # Product Category GMV Breakdown
 st.subheader("GMV Breakdown by Product Category")
-category_chart = create_product_category_breakdown(df, selected_month)
+category_chart = create_product_category_breakdown(df, df['YearMonth'].iloc[-1])  # Use latest month
 st.plotly_chart(category_chart, use_container_width=True)
 
 # Monthly GMV by Product Category

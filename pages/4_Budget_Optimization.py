@@ -186,6 +186,81 @@ for i, (col, month) in enumerate(zip(cols, months)):
         
         st.plotly_chart(fig, use_container_width=True)
 
+# Channel Budget Allocation Chart
+st.subheader("Optym Model: Average Channel Budget Allocation")
+
+# Load data from merged_file.csv
+df = pd.read_csv('attached_assets/merged_file.csv')
+
+# Get the latest date's data
+latest_date = df['Unnamed: 0_baseline'].iloc[0]
+baseline_data = df[df['Unnamed: 0_baseline'] == latest_date].iloc[0]
+optimized_data = df[df['Unnamed: 0_optimized'] == latest_date].iloc[0]
+
+# Create channel names list (excluding Total and Unnamed columns)
+channels = [col.replace('_baseline', '') for col in df.columns if col.endswith('_baseline') 
+           and not col.startswith('Unnamed') and not col.startswith('Total')]
+
+# Create the grouped bar chart
+fig = go.Figure()
+
+# Add baseline bars
+fig.add_trace(go.Bar(
+    name='Baseline',
+    x=channels,
+    y=[baseline_data[f'{channel}_baseline'] for channel in channels],
+    marker_color='#2073BC',
+    opacity=0.8
+))
+
+# Add optimized bars
+fig.add_trace(go.Bar(
+    name='Optimized',
+    x=channels,
+    y=[optimized_data[f'{channel}_optimized'] for channel in channels],
+    marker_color='#2196f3',
+    opacity=0.8
+))
+
+# Update layout
+fig.update_layout(
+    barmode='group',
+    height=500,
+    margin=dict(l=50, r=50, t=50, b=50),
+    showlegend=True,
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    ),
+    xaxis_title="Marketing Channels",
+    yaxis_title="Budget Allocation ($)",
+    plot_bgcolor='white',
+    paper_bgcolor='white',
+    font=dict(
+        size=12,
+        color='#333333'
+    )
+)
+
+# Update axes
+fig.update_xaxes(
+    showgrid=False,
+    gridwidth=1,
+    gridcolor='LightGrey'
+)
+
+fig.update_yaxes(
+    showgrid=True,
+    gridwidth=1,
+    gridcolor='LightGrey'
+)
+
+# Display the chart
+st.plotly_chart(fig, use_container_width=True)
+
 # Chart 1: Robyn Model Channel Budget Comparison
 st.subheader("Robyn Model Channel Budget Comparison")
 
@@ -231,52 +306,6 @@ fig1.update_layout(
 )
 
 st.plotly_chart(fig1, use_container_width=True)
-
-# Chart 2: Optym Model Channel Budget Allocation
-st.subheader("Optym Model Channel Budget Allocation")
-
-# Load merged file data for Optym channel allocation
-optym_data = pd.read_csv('attached_assets/merged_file.csv')
-
-# Select only the baseline columns needed
-baseline_columns = [col for col in optym_data.columns if '_baseline' in col and 'Unnamed' not in col and 'Total' not in col]
-
-# Calculate the average for each channel across all time periods
-channel_averages = {}
-for col in baseline_columns:
-    channel_name = col.replace('_baseline', '')
-    channel_averages[channel_name] = optym_data[col].mean()
-
-# Create dataframe for the bar chart
-channels = list(channel_averages.keys())
-values = list(channel_averages.values())
-
-optym_df = pd.DataFrame({'Channel': channels, 'Budget': values})
-
-# Create clustered bar chart for Optym channels
-fig2 = go.Figure()
-
-# Add bars for each channel
-fig2.add_trace(go.Bar(
-    x=optym_df['Channel'],
-    y=optym_df['Budget'],
-    marker_color=BLUE_PALETTE[1],
-    text=optym_df['Budget'].round(2),
-    textposition='outside'
-))
-
-# Update layout
-fig2.update_layout(
-    title='Optym Model: Average Channel Budget Allocation',
-    xaxis_title='Marketing Channel',
-    yaxis_title='Budget',
-    plot_bgcolor='white',
-    font=dict(color='#424242'),
-    margin=dict(l=10, r=10, t=30, b=10),
-    hovermode='closest'
-)
-
-st.plotly_chart(fig2, use_container_width=True)
 
 # Feature Importance chart with slicer
 st.subheader("Product-wise Feature Importance by Marketing Channel")
