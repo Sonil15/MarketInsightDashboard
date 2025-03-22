@@ -16,10 +16,26 @@ ACCENT_BLUE = '#29B6F6'
 
 @st.cache_data
 def load_merged_data():
-    df = pd.read_csv('attached_assets/final_merged.csv')
-    # Create YearMonth column for easier filtering
-    df['YearMonth'] = df['Year'].astype(str) + '-' + df['Month'].astype(str).str.zfill(2)
-    return df
+    try:
+        df = pd.read_csv('attached_assets/final_merged.csv')
+        # Create YearMonth column for easier filtering
+        df['YearMonth'] = df['Year'].astype(str) + '-' + df['Month'].astype(str).str.zfill(2)
+        return df
+    except Exception as e:
+        st.error(f"Error loading data: {str(e)}")
+        # Return empty DataFrame with required columns
+        return pd.DataFrame({
+            'Year': [],
+            'Month': [],
+            'YearMonth': [],
+            'Total_GMV': [],
+            'Product_Category': [],
+            'Marketing_Channel': [],
+            'Spend': [],
+            'NPS_Score': [],
+            'Stock_Level': [],
+            'Weather_Score': []
+        })
 
 @st.cache_data
 def load_optimized_spend():
